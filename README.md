@@ -28,6 +28,9 @@ Parking spaces are automatically initialized when the application starts.
 - Logging out of scope 
 - Vehicle registration number can only be parked once at any given time
 - Logging, Auth, and persitence beyond application runtime are out of the scope for this exercise
+- Only some unit tests will be added.
+- Integration and other test types are out of scope
+- Basic global exception handling is used (built-in ASP.NET)
 
 ## Design Decisions 
 
