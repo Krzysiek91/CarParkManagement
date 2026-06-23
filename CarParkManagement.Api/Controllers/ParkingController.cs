@@ -1,3 +1,4 @@
+using CarParkManagement.Api.Interfaces;
 using CarParkManagement.Api.Models.Requests;
 using CarParkManagement.Api.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -8,54 +9,51 @@ namespace CarParkManagement.Api.Controllers
     [Route("[controller]")]
     public class ParkingController : ControllerBase
     {
-        private readonly ILogger<ParkingController> _logger;
+        private readonly IParkingService _parkingService;
 
-        public ParkingController(ILogger<ParkingController> logger)
+        public ParkingController(IParkingService parkingService)
         {
-            _logger = logger;
+            _parkingService = parkingService;
         }
+
+        // TODO : Add logging
 
         [HttpPost]
         public ActionResult<ParkVehicleResponse> ParkVehicle([FromBody] ParkVehicleReuqest request)
         {
-            // TODO: implement, mocks for now
-            
-            var response = new ParkVehicleResponse
+            if (_parkingService.IsVehicleParked(request.VehicleReg))
             {
-                VehicleReg = request.VehicleReg,
-                SpaceNumber = 1, 
-                TimeIn = DateTime.Now
-            };
+                return BadRequest($"Vehicle with registration {request.VehicleReg} is already parked.");
+            }
 
-            return Ok(response);
+            var result = _parkingService.ParkVehicle(request);
+
+            if (result == null)
+            {
+                return Conflict("No available parking spaces.");
+            }
+
+            return Ok(result);
         }
 
         [HttpGet]
         public ActionResult<ParkingAvailabilityResponse> GetAvailability()
         {
-            // TODO: implement, mocks for now
-            var response = new ParkingAvailabilityResponse
-            {
-                AvailableSpaces = 95,
-                OccupiedSpaces = 5
-            };
+            var result = _parkingService.GetAvailability();
 
-            return Ok(response);
+            return Ok(result);
         }
 
         [HttpPost("exit")]
         public ActionResult<ExitVehicleResponse> ExitVehicle([FromBody] ExitVehicleRequest request)
         {
-            // TODO: implement, mocks for now
-            var response = new ExitVehicleResponse
-            {
-                VehicleReg = request.VehicleReg,
-                VehicleCharge = 20.20,
-                TimeIn = DateTime.Now.AddHours(-3),
-                TimeOut = DateTime.Now
-            };
+            var result = _parkingService.ExitVehicle(request);
 
-            return Ok(response);
-        }
+            if (result == null)
+            {
+                return NotFound($"Vehicle with registration {request.VehicleReg} not found.");
+            }
+
+            return Ok(result);
     }
-}
+}}

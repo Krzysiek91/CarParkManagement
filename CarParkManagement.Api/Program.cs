@@ -1,11 +1,13 @@
 using CarParkManagement.Api.Interfaces;
 using CarParkManagement.Api.Repositories;
+using CarParkManagement.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // TODO: Important: needs to be 'Scoped' when changed to real DB repo 
 builder.Services.AddSingleton<IParkingRepository, InMemoryParkingRepository>();
+builder.Services.AddScoped<IParkingService, ParkingService>();  
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

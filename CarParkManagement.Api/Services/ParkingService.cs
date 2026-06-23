@@ -37,7 +37,7 @@ public class ParkingService : IParkingService
         return new ParkingAvailabilityResponse
         {
             AvailableSpaces = _repository.GetAvailableSpaces(),
-            OccupiedSpaces = _repository.GetAvailableSpaces()
+            OccupiedSpaces = _repository.GetOccupiedSpaces()
         };
     }
 
