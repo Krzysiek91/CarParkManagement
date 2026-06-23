@@ -8,5 +8,6 @@ public class ParkVehicleReuqest
     public required string VehicleReg { get; set;}
 
     [Required]
+    [Range(1, 3)]
     public int VehicleType { get; set; }
 }
